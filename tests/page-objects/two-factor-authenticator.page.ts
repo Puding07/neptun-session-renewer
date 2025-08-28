@@ -42,6 +42,14 @@ export class TwoFactorAuthenticatorPage {
   public async getCode(issuer: string, secret: string): Promise<void> {
     await this.page.goto(this.url);
     await this.base.waitFor({ state: "visible", timeout: 5000 });
+    if (!(await this.code.isVisible())) {
+      this.addAccount(issuer, secret);
+    }
+    await this.code.click();
+    await this.page.waitForTimeout(2000);
+  }
+
+  public async addAccount(issuer: string, secret: string): Promise<void> {
     await this.editButton.click();
     await this.page.waitForTimeout(5000);
     await this.plusButton.click();
@@ -49,8 +57,6 @@ export class TwoFactorAuthenticatorPage {
     await this.issuerInput.fill(issuer);
     await this.secretInput.fill(secret);
     await this.submitButton.click();
-    await this.page.waitForTimeout(2000);
-    await this.code.click();
     await this.page.waitForTimeout(2000);
   }
 }

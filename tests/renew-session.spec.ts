@@ -1,8 +1,9 @@
-import { test, chromium, BrowserContext } from "@playwright/test";
+import { test, chromium, BrowserContext, expect } from "@playwright/test";
 import { LoginPage } from "./page-objects/login.page";
 import { get2FACode } from "./page-objects/two-factor-authenticator.page";
 import { getClipBoardText, runStepsInNewTab } from "./utility/utils";
 import * as dotenv from "dotenv";
+import { DashboardPage } from "./page-objects/dashboard.page";
 
 dotenv.config();
 
@@ -24,10 +25,7 @@ test.describe("Renew session", () => {
       ],
     });
     await runStepsInNewTab(browserContext, login);
-    // await expect(page).toHaveURL(/dashboard/);
   });
-
-  // test("renew session by navigating", async ({ page }) => {});
 });
 
 const login = async (
@@ -42,8 +40,13 @@ const login = async (
     secret,
     extensionId,
   });
-  await page.waitForTimeout(70000);
   const loginPage = new LoginPage(page);
-  await loginPage.submit2FA(await getClipBoardText(page));
   await loginPage.login(user, password);
+  await loginPage.submit2FA();
+  await expect(page).toHaveURL(/dashboard/);
+  const dasboardPage = new DashboardPage(page);
+  do {
+    await dasboardPage.navigateTo();
+  } while (!(await dasboardPage.subjectRegister.isVisible()));
+  await page.waitForTimeout(28800000);
 };

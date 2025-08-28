@@ -1,4 +1,4 @@
-import { BrowserContext, Page } from "@playwright/test";
+import { BrowserContext, Locator, Page } from "@playwright/test";
 
 export const runStepsInNewTab = async (
   context: BrowserContext,
@@ -21,5 +21,16 @@ export const getClipBoardText = async (page: Page): Promise<string> => {
   page.evaluate(() =>
     navigator.clipboard.readText().then((text) => (clipBoardText = text))
   );
+  console.log("Clipboard text:", clipBoardText);
   return clipBoardText;
+};
+
+export const pasteFromClipboard = async (
+  page: Page,
+  inputLocator: Locator
+): Promise<void> => {
+  await inputLocator.focus();
+
+  // await page.keyboard.press(`Meta+KeyV`);
+  await page.keyboard.press(`Control+KeyV`);
 };

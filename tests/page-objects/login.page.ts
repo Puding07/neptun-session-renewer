@@ -1,5 +1,6 @@
 import { Locator } from "@playwright/test";
 import { time } from "console";
+import { pasteFromClipboard } from "../utility/utils";
 
 export class LoginPage {
   public readonly url = "https://neptun-hweb.sze.hu/hallgato_ng/login";
@@ -11,7 +12,7 @@ export class LoginPage {
   }
 
   public get twoFaForm() {
-    return this.page.locator(".mat-mdc-dialog-content");
+    return this.page.locator("mat-dialog-container");
   }
 
   public get emailInput(): Locator {
@@ -35,10 +36,11 @@ export class LoginPage {
     await this.twoFaForm.waitFor({ state: "visible", timeout: 5000 });
   }
 
-  public async submit2FA(code: string) {
-    await this.twoFaForm
-      .locator("#two-factor-qr-code-input-form-input")
-      .fill(code);
+  public async submit2FA() {
+    pasteFromClipboard(
+      this.page,
+      this.twoFaForm.locator("#two-factor-qr-code-input-form-input")
+    );
     await this.getSubmitButton(this.twoFaForm).click();
   }
 }
