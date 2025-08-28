@@ -1,0 +1,19 @@
+{
+  "name": "neptun-session-renewer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "playwright test --config=playwright.config.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.3.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1"
+  }
+}
